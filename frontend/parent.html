@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard</title>
+    <link rel="stylesheet" href="parent.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="page-title">Parent Dashboard</h1>
+        </header>
+
+        <main class="main-content">
+            <!-- Reward Management Section -->
+            <section class="reward-section">
+                <div class="reward-display">
+                    <h2 class="section-title">Current Reward</h2>
+                    <div class="reward-info">
+                        <span class="reward-amount" id="currentReward">0</span>
+                        <span class="reward-unit">minutes</span>
+                        <button class="refresh-btn" onclick="loadReward()" type="button" aria-label="Refresh reward amount">
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="reward-form-container">
+                    <form id="rewardForm" class="reward-form">
+                        <fieldset class="form-fieldset">
+                            <legend class="form-legend">Update Reward</legend>
+                            <div class="input-group">
+                                <label for="newReward" class="input-label">New Reward Amount</label>
+                                <input type="number" id="newReward" name="newReward" min="0" required 
+                                       class="reward-input" placeholder="Enter minutes">
+                                <button type="submit" class="submit-btn">Update Reward</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </section>
+            
+            <!-- Task Creation Section -->
+            <section class="task-creation-section">
+                <h2 class="section-title">Create New Task</h2>
+                <div class="task-form-container">
+                    <form id="taskForm" class="task-form">
+                        <fieldset class="form-fieldset">
+                            <legend class="form-legend">Task Details</legend>
+                            <div class="form-grid">
+                                <div class="input-group full-width">
+                                    <label for="taskTitle" class="input-label">Task Title</label>
+                                    <textarea id="taskTitle" name="title" rows="4" required 
+                                              class="task-title-input" placeholder="Describe the task..."></textarea>
+                                </div>
+                                <div class="input-group">
+                                    <label for="taskReward" class="input-label">Reward (minutes)</label>
+                                    <input type="number" id="taskReward" name="reward" min="1" required 
+                                           class="task-reward-input" placeholder="Enter reward">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="submit-btn primary-btn">Create Task</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Tasks Management Section -->
+            <section class="tasks-section">
+                <div class="tasks-header">
+                    <h2 class="section-title">Tasks</h2>
+                    <button class="download-btn" onclick="downloadCSV()" type="button" aria-label="Download tasks as CSV">
+                        Download CSV
+                    </button>
+                </div>
+                
+                <div class="tasks-container">
+                    <div class="table-container">
+                        <table id="tasksTable" class="tasks-table">
+                            <thead class="table-header">
+                                <tr class="header-row">
+                                    <th class="header-cell" scope="col">ID</th>
+                                    <th class="header-cell" scope="col">Title</th>
+                                    <th class="header-cell" scope="col">Reward (min)</th>
+                                    <th class="header-cell" scope="col">Status</th>
+                                    <th class="header-cell" scope="col">Created</th>
+                                    <th class="header-cell" scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tasksBody" class="table-body">
+                                <!-- Tasks will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="parent.js"></script>
+</body>
+</html>
