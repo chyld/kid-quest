@@ -6,8 +6,48 @@
     <title>Child Dashboard</title>
     <link rel="stylesheet" href="index.css">
 </head>
-<body>
-    <h1>hello world</h1>
+<body class="zyx-body">
+    <div class="zyx-container">
+        <header class="zyx-header">
+            <h1 class="zyx-page-title">Dashboard</h1>
+        </header>
+        
+        <main class="zyx-main">
+            <section class="zyx-timer-section">
+                <div class="zyx-timer-container">
+                    <h2 class="zyx-section-title">Fun Timer</h2>
+                    <div class="zyx-timer-display-container">
+                        <span id="timerDisplay" class="zyx-timer-display">00:00</span>
+                    </div>
+                    <div class="zyx-timer-controls">
+                        <button id="startTimerBtn" class="zyx-btn zyx-btn-start" onclick="startTimer()">Start Timer</button>
+                        <button id="stopTimerBtn" class="zyx-btn zyx-btn-stop" onclick="stopTimer()" disabled>Stop Timer</button>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="zyx-tasks-section">
+                <div class="zyx-tasks-container">
+                    <h2 class="zyx-section-title">My Tasks</h2>
+                    <div class="zyx-table-wrapper">
+                        <table id="tasksTable" class="zyx-tasks-table">
+                            <thead class="zyx-table-head">
+                                <tr class="zyx-table-row zyx-header-row">
+                                    <th class="zyx-table-cell zyx-header-cell">Task</th>
+                                    <th class="zyx-table-cell zyx-header-cell">Reward</th>
+                                    <th class="zyx-table-cell zyx-header-cell">Status</th>
+                                    <th class="zyx-table-cell zyx-header-cell">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tasksBody" class="zyx-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
     <script src="index.js"></script>
 </body>
 </html>
