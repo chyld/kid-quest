@@ -19,7 +19,7 @@ async function createTask(event) {
     try {
         if (editingTaskId) {
             // Update existing task
-            const response = await fetch(`http://127.0.0.1:8000/tasks/${editingTaskId}`, {
+            const response = await fetch(`/api/tasks/${editingTaskId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ async function createTask(event) {
             }
         } else {
             // Create new task
-            const response = await fetch('http://127.0.0.1:8000/tasks/', {
+            const response = await fetch('/api/tasks/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -61,7 +61,7 @@ async function createTask(event) {
 
 async function loadReward() {
     try {
-        const response = await fetch('http://127.0.0.1:8000/reward');
+        const response = await fetch('/api/reward');
         const rewardData = await response.json();
         document.getElementById('currentReward').textContent = rewardData.total_reward || 0;
     } catch (error) {
@@ -75,7 +75,7 @@ async function updateReward(event) {
     const newValue = parseInt(document.getElementById('newReward').value);
     
     try {
-        const response = await fetch(`http://127.0.0.1:8000/reward?new_value=${newValue}`, {
+        const response = await fetch(`/api/reward?new_value=${newValue}`, {
             method: 'PUT'
         });
         
@@ -90,7 +90,7 @@ async function updateReward(event) {
 
 async function loadTasks() {
     try {
-        let url = 'http://127.0.0.1:8000/tasks/';
+        let url = '/api/tasks/';
         if (currentFilter !== 'all') {
             url += `?status=${currentFilter}`;
         }
@@ -137,7 +137,7 @@ function displayTasks(tasks) {
 
 async function updateTaskStatus(taskId, action) {
     try {
-        await fetch(`http://127.0.0.1:8000/tasks/${taskId}/status`, {
+        await fetch(`/api/tasks/${taskId}/status`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -154,7 +154,7 @@ async function updateTaskStatus(taskId, action) {
 
 async function downloadCSV() {
     try {
-        const response = await fetch('http://127.0.0.1:8000/tasks/dump-csv');
+        const response = await fetch('/api/tasks/dump-csv');
         const csvData = await response.text();
         
         const blob = new Blob([csvData], { type: 'text/csv' });
@@ -173,7 +173,7 @@ async function downloadCSV() {
 
 async function deleteTask(taskId) {
     try {
-        await fetch(`http://127.0.0.1:8000/tasks/${taskId}`, {
+        await fetch(`/api/tasks/${taskId}`, {
             method: 'DELETE'
         });
         loadTasks();
