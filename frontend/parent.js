@@ -1,6 +1,7 @@
 console.log("Parent dashboard loaded");
 
 let editingTaskId = null;
+let currentFilter = 'all';
 
 function editTask(taskId, title, reward) {
     editingTaskId = taskId;
@@ -89,7 +90,11 @@ async function updateReward(event) {
 
 async function loadTasks() {
     try {
-        const response = await fetch('http://127.0.0.1:8000/tasks/');
+        let url = 'http://127.0.0.1:8000/tasks/';
+        if (currentFilter !== 'all') {
+            url += `?status=${currentFilter}`;
+        }
+        const response = await fetch(url);
         const tasks = await response.json();
         displayTasks(tasks);
     } catch (error) {
@@ -106,21 +111,25 @@ function displayTasks(tasks) {
         
         let statusButton = '';
         if (task.status === 'pending') {
-            statusButton = `<button onclick="updateTaskStatus(${task.id}, 'start')">${task.status}</button>`;
+            statusButton = `<span class="zyx-task-status zyx-status-pending" onclick="updateTaskStatus(${task.id}, 'start')">${task.status}</span>`;
         } else if (task.status === 'working') {
-            statusButton = `<button onclick="updateTaskStatus(${task.id}, 'finish')">${task.status}</button>`;
+            statusButton = `<span class="zyx-task-status zyx-status-in-progress" onclick="updateTaskStatus(${task.id}, 'finish')">${task.status}</span>`;
         } else {
-            statusButton = `<button disabled>${task.status}</button>`;
+            statusButton = `<span class="zyx-task-status zyx-status-completed">${task.status}</span>`;
         }
         
+        const deleteButton = task.status === 'pending' 
+            ? '<button class="zyx-action-link zyx-delete-link" onclick="deleteTask(' + task.id + ')">Delete</button>'
+            : '';
+        
         row.innerHTML = `
-            <td><button onclick="editTask(${task.id}, '${task.title.replace(/'/g, "\\'")}', ${task.reward})">${task.id}</button></td>
+            <td><span class="zyx-task-id" onclick="editTask(${task.id}, '${task.title.replace(/'/g, "\\'")}', ${task.reward})">${task.id}</span></td>
             <td>${task.title}</td>
             <td>${task.reward}</td>
             <td>${statusButton}</td>
             <td>${new Date(task.created_at).toLocaleDateString()}</td>
-            <td>
-                <button onclick="deleteTask(${task.id})">Delete</button>
+            <td class="zyx-actions-cell">
+                ${deleteButton}
             </td>
         `;
     });
@@ -171,6 +180,19 @@ async function deleteTask(taskId) {
     } catch (error) {
         console.error('Error deleting task:', error);
     }
+}
+
+function filterTasks(status) {
+    currentFilter = status;
+    
+    // Update button active state
+    document.querySelectorAll('.zyx-filter-btn').forEach(btn => {
+        btn.classList.remove('zyx-filter-active');
+    });
+    document.querySelector(`[data-filter="${status}"]`).classList.add('zyx-filter-active');
+    
+    // Reload tasks with filter
+    loadTasks();
 }
 
 document.getElementById('taskForm').addEventListener('submit', createTask);

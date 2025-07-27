@@ -1,5 +1,277 @@
 @import "tailwindcss";
 
+/* Compact Modern Design */
 .zyx-master-container {
-  @apply w-full bg-red-500;
+  @apply w-full min-h-screen bg-purple-50 text-gray-900;
+}
+
+.zyx-main-content {
+  @apply p-3 space-y-3;
+}
+
+/* Header */
+.zyx-header {
+  @apply bg-white shadow-sm px-4 py-3 border-b border-gray-200;
+}
+
+.zyx-page-title {
+  @apply text-2xl font-bold text-center text-gray-800;
+}
+
+/* Sections */
+.zyx-reward-section,
+.zyx-task-creation-section,
+.zyx-tasks-section {
+  @apply bg-white rounded-lg shadow-sm border border-gray-200 p-4;
+}
+
+.zyx-section-title {
+  @apply text-lg font-semibold text-gray-800 mb-3;
+}
+
+/* Reward Display */
+.zyx-reward-display {
+  @apply mb-4;
+}
+
+.zyx-reward-info {
+  @apply flex items-center justify-between p-3 bg-purple-100 rounded-md border border-purple-200;
+}
+
+.zyx-reward-amount {
+  @apply text-2xl font-bold text-purple-700;
+}
+
+.zyx-reward-unit {
+  @apply text-sm text-gray-600 ml-1;
+}
+
+/* Forms */
+.zyx-form-fieldset {
+  @apply border-0 p-0;
+}
+
+.zyx-form-legend {
+  @apply sr-only;
+}
+
+.zyx-form-grid {
+  @apply grid grid-cols-1 gap-3;
+}
+
+.zyx-input-group {
+  @apply space-y-1;
+}
+
+.zyx-input-label {
+  @apply block text-sm font-medium text-gray-700;
+}
+
+.zyx-reward-input,
+.zyx-task-reward-input {
+  @apply w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500;
+}
+
+.zyx-task-title-input {
+  @apply w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none;
+}
+
+.zyx-form-actions {
+  @apply mt-3;
+}
+
+/* Tasks Table */
+.zyx-tasks-header {
+  @apply flex justify-between items-center mb-4;
+}
+
+/* Filter Buttons */
+.zyx-filter-container {
+  @apply mb-4;
+}
+
+.zyx-filter-buttons {
+  @apply flex gap-2 flex-wrap;
+}
+
+.zyx-filter-btn {
+  @apply px-3 py-1 text-sm font-medium rounded-md border-2 transition-all duration-200 transform hover:scale-105 flex-1 text-center min-w-0;
+}
+
+.zyx-filter-btn:not(.zyx-filter-active) {
+  @apply bg-white text-gray-600 border-gray-300 hover:bg-gray-50 hover:border-gray-400;
+}
+
+.zyx-filter-active {
+  @apply bg-purple-600 text-white border-purple-600 shadow-md;
+}
+
+.zyx-tasks-container {
+  @apply overflow-hidden;
+}
+
+.zyx-table-container {
+  @apply overflow-x-auto;
+}
+
+.zyx-tasks-table {
+  @apply w-full text-sm;
+}
+
+.zyx-table-header {
+  @apply bg-gray-50;
+}
+
+.zyx-header-row {
+  @apply border-b border-gray-200;
+}
+
+.zyx-header-cell {
+  @apply px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+.zyx-table-body {
+  @apply bg-white divide-y divide-gray-100;
+}
+
+.zyx-table-body tr {
+  @apply hover:bg-gray-50;
+}
+
+.zyx-table-body td {
+  @apply px-3 py-2 text-sm text-gray-900 whitespace-nowrap;
+}
+
+/* Table Action Buttons */
+.zyx-action-btn {
+  @apply px-3 py-1 text-xs font-semibold rounded-md transition-all duration-200 transform hover:scale-105 mr-1;
+}
+
+.zyx-complete-btn {
+  @apply bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-sm hover:shadow-md;
+}
+
+.zyx-delete-btn {
+  @apply bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-sm hover:shadow-md;
+}
+
+.zyx-edit-btn {
+  @apply bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-sm hover:shadow-md;
+}
+
+.zyx-view-btn {
+  @apply bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white shadow-sm hover:shadow-md;
+}
+
+/* Interactive Table Column Content */
+.zyx-task-id {
+  @apply font-mono text-purple-600 hover:text-purple-800 cursor-pointer underline decoration-dotted hover:decoration-solid transition-colors;
+}
+
+.zyx-task-status {
+  @apply inline-flex px-2 py-1 text-xs font-semibold rounded-full cursor-pointer hover:shadow-md transition-all duration-200 transform hover:scale-105;
+}
+
+.zyx-status-pending {
+  @apply bg-yellow-100 text-yellow-800 hover:bg-yellow-200;
+}
+
+.zyx-status-in-progress {
+  @apply bg-blue-100 text-blue-800 hover:bg-blue-200;
+}
+
+.zyx-status-completed {
+  @apply bg-green-100 text-green-800 hover:bg-green-200;
+}
+
+.zyx-status-cancelled {
+  @apply bg-red-100 text-red-800 hover:bg-red-200;
+}
+
+.zyx-actions-cell {
+  @apply flex items-center gap-1 justify-start;
+}
+
+/* Action Links/Buttons in Table */
+.zyx-action-link {
+  @apply px-2 py-1 text-xs font-semibold rounded-md transition-all duration-200 transform hover:scale-105 cursor-pointer no-underline;
+}
+
+.zyx-delete-link {
+  @apply bg-red-500 hover:bg-red-600 text-white shadow-sm hover:shadow-md;
+}
+
+.zyx-complete-link {
+  @apply bg-green-500 hover:bg-green-600 text-white shadow-sm hover:shadow-md;
+}
+
+.zyx-edit-link {
+  @apply bg-blue-500 hover:bg-blue-600 text-white shadow-sm hover:shadow-md;
+}
+
+/* Buttons - Obvious & Beautiful */
+.zyx-refresh-btn {
+  @apply px-4 py-2 text-sm font-semibold bg-white hover:bg-gray-50 text-gray-700 rounded-lg border-2 border-gray-300 hover:border-gray-400 shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105;
+}
+
+.zyx-submit-btn {
+  @apply px-6 py-3 text-sm font-bold bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 focus:ring-4 focus:ring-purple-300/50;
+}
+
+.zyx-download-btn {
+  @apply px-5 py-2 text-sm font-bold bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105;
+}
+
+.zyx-primary-btn {
+  @apply bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .zyx-main-content {
+    @apply p-2 space-y-2;
+  }
+  
+  .zyx-reward-section,
+  .zyx-task-creation-section,
+  .zyx-tasks-section {
+    @apply p-3;
+  }
+  
+  .zyx-header {
+    @apply px-3 py-2;
+  }
+  
+  .zyx-page-title {
+    @apply text-xl;
+  }
+  
+  .zyx-section-title {
+    @apply text-base mb-2;
+  }
+  
+  .zyx-reward-info {
+    @apply flex-col items-start gap-2;
+  }
+  
+  .zyx-tasks-header {
+    @apply flex-col gap-2 items-start;
+  }
+  
+  .zyx-form-grid {
+    @apply gap-2;
+  }
+  
+  .zyx-header-cell,
+  .zyx-table-body td {
+    @apply px-2 py-1;
+  }
+  
+  .zyx-filter-buttons {
+    @apply gap-1;
+  }
+  
+  .zyx-filter-btn {
+    @apply px-2 py-1 text-xs;
+  }
 }

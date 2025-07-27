@@ -77,6 +77,15 @@
                     </button>
                 </div>
                 
+                <div class="zyx-filter-container">
+                    <div class="zyx-filter-buttons">
+                        <button class="zyx-filter-btn zyx-filter-active" onclick="filterTasks('all')" data-filter="all">All</button>
+                        <button class="zyx-filter-btn" onclick="filterTasks('pending')" data-filter="pending">Pending</button>
+                        <button class="zyx-filter-btn" onclick="filterTasks('working')" data-filter="working">Working</button>
+                        <button class="zyx-filter-btn" onclick="filterTasks('done')" data-filter="done">Done</button>
+                    </div>
+                </div>
+                
                 <div class="zyx-tasks-container">
                     <div class="zyx-table-container">
                         <table id="tasksTable" class="zyx-tasks-table">
