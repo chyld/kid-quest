@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+.zyx-master-container {
+  @apply w-full bg-red-500;
+}
