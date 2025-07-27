@@ -1,1 +1,208 @@
 @import "tailwindcss";
+
+/* ====== GLOBAL STYLES ====== */
+.zyx-body {
+  @apply min-h-screen font-sans bg-amber-500;
+  transition: background-color 0.3s ease;
+}
+
+/* Timer running state - green background */
+.zyx-body[style*="green"] {
+  background-color: #10b981 !important;
+}
+
+/* Timer stopped state - red background */
+.zyx-body[style*="red"] {
+  background-color: #f59e0b !important;
+}
+
+.zyx-container {
+  @apply max-w-6xl mx-auto px-4 py-6 sm:px-6 lg:px-8;
+}
+
+
+/* ====== MAIN LAYOUT ====== */
+.zyx-main {
+  @apply space-y-8;
+}
+
+/* ====== SECTION STYLES ====== */
+.zyx-timer-section,
+.zyx-tasks-section {
+  @apply bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden;
+  @apply transition-shadow duration-300 hover:shadow-xl;
+}
+
+.zyx-timer-container,
+.zyx-tasks-container {
+  @apply p-6 sm:p-8;
+}
+
+.zyx-section-title {
+  @apply text-2xl sm:text-3xl font-bold text-gray-800 mb-6 text-center;
+  @apply flex items-center justify-center gap-2;
+}
+
+/* ====== TIMER STYLES ====== */
+.zyx-timer-display-container {
+  @apply bg-indigo-600 rounded-xl p-8 mb-6;
+  @apply shadow-inner border-2 border-indigo-200;
+}
+
+.zyx-timer-display {
+  @apply text-6xl sm:text-7xl font-mono font-bold text-white text-center block;
+  @apply drop-shadow-lg tracking-wider;
+}
+
+.zyx-timer-controls {
+  @apply flex flex-col sm:flex-row gap-4 justify-center items-center;
+}
+
+/* ====== BUTTON STYLES ====== */
+.zyx-btn {
+  @apply px-6 py-3 rounded-xl font-semibold text-lg transition-all duration-200;
+  @apply shadow-md hover:shadow-lg;
+  @apply focus:outline-none focus:ring-4;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-md;
+}
+
+.zyx-btn-start {
+  @apply bg-emerald-500 text-white;
+  @apply hover:bg-emerald-600;
+  @apply focus:ring-emerald-300;
+}
+
+.zyx-btn-stop {
+  @apply bg-orange-500 text-white;
+  @apply hover:bg-orange-600;
+  @apply focus:ring-orange-300;
+}
+
+/* ====== TABLE STYLES ====== */
+.zyx-table-wrapper {
+  @apply overflow-x-auto rounded-xl border border-gray-200;
+}
+
+.zyx-tasks-table {
+  @apply w-full bg-white;
+}
+
+.zyx-table-head {
+  @apply bg-slate-900;
+}
+
+.zyx-header-row {
+  @apply border-b border-slate-700 bg-slate-900;
+}
+
+.zyx-header-cell {
+  @apply px-6 py-4 text-left text-sm font-bold uppercase tracking-wider bg-slate-900;
+  color: white !important;
+}
+
+.zyx-table-body {
+  @apply divide-y divide-gray-200;
+}
+
+.zyx-table-row {
+}
+
+.zyx-table-cell {
+  @apply px-6 py-4 text-sm text-gray-800;
+}
+
+.zyx-table-cell:first-child {
+  @apply font-semibold text-gray-900;
+}
+
+.zyx-working-message {
+  @apply text-orange-600 font-medium italic;
+}
+
+/* ====== MODAL STYLES ====== */
+.zyx-modal {
+  @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.zyx-modal-hidden {
+  @apply opacity-0 invisible;
+}
+
+.zyx-modal-backdrop {
+  @apply absolute inset-0 bg-black/50;
+}
+
+.zyx-modal-container {
+  @apply relative w-full max-w-lg mx-auto;
+  max-height: 80vh;
+}
+
+.zyx-modal-content {
+  @apply bg-white rounded-2xl shadow-2xl overflow-hidden;
+  @apply transform transition-transform duration-300 flex flex-col;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  max-height: 80vh;
+}
+
+.zyx-modal-hidden .zyx-modal-content {
+  @apply scale-95;
+}
+
+.zyx-modal-header {
+  @apply flex items-center justify-between p-6 border-b border-gray-200;
+  @apply bg-indigo-600;
+}
+
+.zyx-modal-title {
+  @apply text-xl font-bold text-white;
+}
+
+.zyx-modal-close {
+  @apply text-white hover:text-gray-200 text-3xl font-bold;
+  @apply w-8 h-8 flex items-center justify-center rounded-full;
+  @apply hover:bg-white/20 transition-colors duration-200;
+}
+
+.zyx-modal-body {
+  @apply p-6 overflow-y-auto flex-1;
+}
+
+.zyx-modal-text {
+  @apply text-gray-800 text-sm leading-normal;
+}
+
+.zyx-modal-footer {
+  @apply p-6 border-t border-gray-200 flex justify-end;
+}
+
+/* ====== CLICKABLE TASK NAMES ====== */
+.zyx-task-name {
+  @apply cursor-pointer text-indigo-600 hover:text-indigo-800;
+  @apply transition-colors duration-200 underline decoration-dotted;
+}
+
+/* ====== RESPONSIVE DESIGN ====== */
+@media (max-width: 640px) {
+  .zyx-timer-display {
+    @apply text-5xl;
+  }
+  
+  .zyx-header-cell,
+  .zyx-table-cell {
+    @apply px-4 py-3 text-xs;
+  }
+  
+  .zyx-btn {
+    @apply text-base px-4 py-2;
+  }
+  
+  .zyx-modal-container {
+    @apply max-w-full mx-2;
+    max-height: 90vh;
+  }
+  
+  .zyx-modal-text {
+    @apply text-xs;
+  }
+}

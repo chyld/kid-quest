@@ -93,13 +93,29 @@ const UIManager = {
             const row = tbody.insertRow();
             const actionContent = this._getTaskActionContent(task);
             
+            const truncatedTitle = task.title.length > 30 ? task.title.substring(0, 30) + '...' : task.title;
+            
             row.innerHTML = `
-                <td class="zyx-table-cell">${task.title}</td>
+                <td class="zyx-table-cell">
+                    <span class="zyx-task-name" data-task-id="${task.id}">${truncatedTitle}</span>
+                </td>
                 <td class="zyx-table-cell">${task.reward} min</td>
                 <td class="zyx-table-cell">${task.status}</td>
                 <td class="zyx-table-cell">${actionContent}</td>
             `;
+            
+            // Add event listener to the task name span
+            const taskNameSpan = row.querySelector('.zyx-task-name');
+            taskNameSpan.addEventListener('click', () => {
+                ModalManager.open(task.title, task.description || task.title);
+            });
         });
+    },
+
+    _escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     },
 
     _getTaskActionContent(task) {
@@ -222,9 +238,31 @@ const App = {
     }
 };
 
+// ====== MODAL MANAGER ======
+const ModalManager = {
+    open(taskTitle, taskText) {
+        const modal = Utils.getElementById('taskModal');
+        const titleElement = Utils.getElementById('modalTaskTitle');
+        const textElement = Utils.getElementById('modalTaskText');
+        
+        titleElement.textContent = 'Task Details';
+        textElement.textContent = taskText;
+        
+        modal.classList.remove('zyx-modal-hidden');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    },
+
+    close() {
+        const modal = Utils.getElementById('taskModal');
+        modal.classList.add('zyx-modal-hidden');
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+};
+
 // ====== GLOBAL FUNCTIONS (for HTML onclick handlers) ======
 window.startTimer = () => TimerManager.start();
 window.stopTimer = () => TimerManager.stop();
+window.ModalManager = ModalManager;
 
 // ====== APPLICATION STARTUP ======
 window.addEventListener('load', () => App.init());
