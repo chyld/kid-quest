@@ -14,6 +14,9 @@
 - `npm run dev`
 - http://localhost:5173/
 - http://localhost:5173/parent.html
+
 ## Admin
+
 - `sudo visudo`
 - `%sudo   ALL=(ALL:ALL) ALL, (ALL) NOPASSWD: /sbin/iptables, /sbin/ip6tables`
+
