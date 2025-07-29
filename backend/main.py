@@ -1,20 +1,11 @@
 from typing import Union
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from networking import NetworkingState, control_networking
 from tasks import Task, TaskAction, process_task_status_update
 from db import create_db_and_tables, insert_task, get_all_tasks, get_task_by_id, update_task, delete_task, update_task_status, dump_tasks_to_csv
 
 app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 @app.on_event("startup")
 async def startup_event():
