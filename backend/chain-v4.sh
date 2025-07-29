@@ -29,3 +29,5 @@ else
     echo "IPv4 internet off already"
   fi
 fi
+
+echo "End of IPv4 script"
