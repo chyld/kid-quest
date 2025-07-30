@@ -10,8 +10,6 @@ if [ $DOES_CHAIN_EXIST -gt 1 ]; then
 else
   echo "creating IPv6 chain"
   sudo ip6tables -N INTERNET_OFF
-  sudo ip6tables -A INTERNET_OFF -d ::1/128 -j RETURN
-  sudo ip6tables -A INTERNET_OFF -d fe80::/10 -j RETURN
   sudo ip6tables -A INTERNET_OFF -j REJECT
 fi
 
