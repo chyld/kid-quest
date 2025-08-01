@@ -7,6 +7,7 @@
 - uv
 - node
 - tmux
+- need to use a static IP, so can be remotely managed
 
 ## Backend
 
