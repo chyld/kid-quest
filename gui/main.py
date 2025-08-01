@@ -148,6 +148,9 @@ class RewardApp(QMainWindow):
         self.tasks_table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.tasks_table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         
+        # Disable row selection
+        self.tasks_table.setSelectionMode(QTableWidget.NoSelection)
+        
         # Column sizing
         self.tasks_table.horizontalHeader().setStretchLastSection(True)
         self.tasks_table.setColumnWidth(0, 200)  # Title column wider

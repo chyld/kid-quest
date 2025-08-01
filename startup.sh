@@ -1,17 +1,24 @@
 #!/bin/bash
 
-echo "begin" >/tmp/lolz.txt
+# Kid Quest Application Startup Script
+# Starts backend and frontend services in the background
+
+set -e
 
 # Get the absolute path of the script's directory
-working_dir="$(cd "$(dirname "$0")" && pwd)"
-echo "wd: $working_dir" >>/tmp/lolz.txt
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Start backend
-cd "$working_dir/backend"
-echo "pwd1: $(pwd)" >>/tmp/lolz.txt
+# Start backend service
+cd "$SCRIPT_DIR/backend"
 ./start.sh &
 
-# Start frontend
-cd "$working_dir/frontend"
-echo "pwd2: $(pwd)" >>/tmp/lolz.txt
+# Start frontend service  
+cd "$SCRIPT_DIR/frontend"
 npm run dev &
+
+# Wait for services to start, then turn networking off
+sleep 10
+curl -X POST http://localhost:8000/networking -H "Content-Type: application/json" -d '{"state": "off"}' &
+
+# Services started - run in background
+exit 0
