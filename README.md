@@ -2,6 +2,12 @@
 
 - clone repo
 
+## Requirements
+
+- uv
+- node
+- tmux
+
 ## Backend
 
 - add reward.txt; set initial value
@@ -14,7 +20,11 @@
 - `npm run dev`
 - http://localhost:5173/
 
-## Admin
+## Permissions
 
 - `sudo visudo`
 - `%sudo   ALL=(ALL:ALL) ALL, (ALL) NOPASSWD: /sbin/iptables, /sbin/ip6tables`
+
+## GUI
+
+- `uv run main.py`
