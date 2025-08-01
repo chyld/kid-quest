@@ -29,3 +29,6 @@
 
 - `uv sync`
 - `uv run main.py`
+- the `kidquest.desktop` needs to move to `$HOME/.local/share/applications`; does not need to `chmod +x`
+- the `Path` in the desktop file is the only thing that would need to change for other systems; it is the `cwd`
+- either add `uv` absolute path; or just edit the `~/.profile` and update the `PATH`; it runs on gnome login, so all downstream processes will inherit the env
