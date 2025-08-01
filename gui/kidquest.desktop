@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Kid Quest
+Comment=Reward Tracker and Timer
+Exec=uv run main.py
+Icon=applications-games
+Path=/home/elsa/Developer/kid-quest/gui
+Terminal=false
+Categories=Game;Education;
+StartupNotify=true
