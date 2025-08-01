@@ -38,9 +38,9 @@ def get_all_tasks(status: str = None):
     conn = get_db_connection()
     cursor = conn.cursor()
     if status:
-        cursor.execute("SELECT id, title, reward, created_at, status FROM tasks WHERE status = ? ORDER BY created_at DESC", (status,))
+        cursor.execute("SELECT id, title, reward, created_at, status FROM tasks WHERE status = ? ORDER BY id DESC", (status,))
     else:
-        cursor.execute("SELECT id, title, reward, created_at, status FROM tasks ORDER BY created_at DESC")
+        cursor.execute("SELECT id, title, reward, created_at, status FROM tasks ORDER BY id DESC")
     tasks = cursor.fetchall()
     conn.close()
     return [dict(task) for task in tasks]
@@ -81,7 +81,7 @@ def update_task_status(task_id: int, new_status: str):
 def dump_tasks_to_csv():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, title, reward, created_at, status FROM tasks ORDER BY created_at DESC")
+    cursor.execute("SELECT id, title, reward, created_at, status FROM tasks ORDER BY id DESC")
     tasks = cursor.fetchall()
     conn.close()
 

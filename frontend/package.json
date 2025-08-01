@@ -12,11 +12,9 @@
   "author": "",
   "license": "ISC",
   "type": "module",
-  "devDependencies": {
-    "vite": "^7.0.6"
-  },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "vite": "^7.0.6"
   }
 }

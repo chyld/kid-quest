@@ -1,268 +1,201 @@
+console.log("Parent dashboard loaded");
 
-/**
- * Child Dashboard Application
- * Modular architecture for task management and timer functionality
- */
+let editingTaskId = null;
+let currentFilter = 'all';
 
-// ====== CONFIGURATION ======
-const CONFIG = {
-    API_BASE_URL: '/api',
-    TIMER_INTERVAL_MS: 1000,
-    NETWORKING_CHECK_INTERVAL_MS: 10000,
-    REWARD_LOAD_DELAY_MS: 1000
-};
+function editTask(taskId, title, reward) {
+    editingTaskId = taskId;
+    document.getElementById('taskTitle').value = title;
+    document.getElementById('taskReward').value = reward;
+    document.querySelector('#taskForm button[type="submit"]').textContent = 'Update Task';
+}
 
-// ====== STATE MANAGEMENT ======
-const AppState = {
-    timer: {
-        interval: null,
-        seconds: 0,
-        isRunning() { return this.interval !== null; }
-    },
-    networking: {
-        checkInterval: null
-    }
-};
-
-// ====== API SERVICE ======
-const ApiService = {
-    async get(endpoint) {
-        const response = await fetch(`${CONFIG.API_BASE_URL}${endpoint}`);
-        if (!response.ok) throw new Error(`API Error: ${response.status}`);
-        return response.json();
-    },
-
-    async put(endpoint, data = null) {
-        const options = {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' }
-        };
-        if (data) options.body = JSON.stringify(data);
-        
-        const response = await fetch(`${CONFIG.API_BASE_URL}${endpoint}`, options);
-        if (!response.ok) throw new Error(`API Error: ${response.status}`);
-        return response;
-    },
-
-    async post(endpoint, data) {
-        const response = await fetch(`${CONFIG.API_BASE_URL}${endpoint}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        if (!response.ok) throw new Error(`API Error: ${response.status}`);
-        return response;
-    }
-};
-
-// ====== UTILITY FUNCTIONS ======
-const Utils = {
-    formatTime(totalSeconds) {
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    },
-
-    getElementById(id) {
-        const element = document.getElementById(id);
-        if (!element) throw new Error(`Element with id '${id}' not found`);
-        return element;
-    }
-};
-
-// ====== UI MANAGER ======
-const UIManager = {
-    updateTimerDisplay() {
-        Utils.getElementById('timerDisplay').textContent = Utils.formatTime(AppState.timer.seconds);
-    },
-
-    updateBackgroundColor() {
-        document.body.style.backgroundColor = AppState.timer.isRunning() ? 'green' : 'red';
-    },
-
-    setTimerButtonStates(isRunning) {
-        Utils.getElementById('startTimerBtn').disabled = isRunning;
-        Utils.getElementById('stopTimerBtn').disabled = !isRunning;
-    },
-
-    renderTasks(tasks) {
-        const tbody = Utils.getElementById('tasksBody');
-        tbody.innerHTML = '';
-        
-        tasks.forEach(task => {
-            const row = tbody.insertRow();
-            const actionContent = this._getTaskActionContent(task);
-            
-            const truncatedTitle = task.title.length > 30 ? task.title.substring(0, 30) + '...' : task.title;
-            
-            row.innerHTML = `
-                <td class="zyx-table-cell">
-                    <span class="zyx-task-name" data-task-id="${task.id}">${truncatedTitle}</span>
-                </td>
-                <td class="zyx-table-cell">${task.reward} min</td>
-                <td class="zyx-table-cell">${task.status}</td>
-                <td class="zyx-table-cell">${actionContent}</td>
-            `;
-            
-            // Add event listener to the task name span
-            const taskNameSpan = row.querySelector('.zyx-task-name');
-            taskNameSpan.addEventListener('click', () => {
-                ModalManager.open(task.title, task.description || task.title);
+async function createTask(event) {
+    event.preventDefault();
+    
+    const title = document.getElementById('taskTitle').value;
+    const reward = parseInt(document.getElementById('taskReward').value);
+    
+    try {
+        if (editingTaskId) {
+            // Update existing task
+            const response = await fetch(`/api/tasks/${editingTaskId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: title,
+                    reward: reward
+                })
             });
-        });
-    },
-
-    _escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    },
-
-    _getTaskActionContent(task) {
-        if (task.status === 'pending') {
-            return `<button class="zyx-btn zyx-btn-start" onclick="TaskManager.startTask(${task.id})">Start</button>`;
-        } else if (task.status === 'working') {
-            return '<span class="zyx-working-message">Tell parent when you are done.</span>';
-        }
-        return '';
-    }
-};
-
-// ====== TASK MANAGER ======
-const TaskManager = {
-    async loadTasks() {
-        try {
-            const tasks = await ApiService.get('/tasks/');
-            const activeTasks = tasks.filter(task => 
-                task.status === 'pending' || task.status === 'working'
-            );
-            UIManager.renderTasks(activeTasks);
-        } catch (error) {
-            console.error('Error loading tasks:', error);
-        }
-    },
-
-    async startTask(taskId) {
-        try {
-            await ApiService.put(`/tasks/${taskId}/status`, { action: 'start' });
-            await this.loadTasks();
-        } catch (error) {
-            console.error('Error starting task:', error);
-        }
-    }
-};
-
-// ====== TIMER MANAGER ======
-const TimerManager = {
-    async loadFromReward() {
-        try {
-            const rewardData = await ApiService.get('/reward');
-            const reward = rewardData.total_reward || 0;
-            AppState.timer.seconds = reward * 60;
-            UIManager.updateTimerDisplay();
-        } catch (error) {
-            console.error('Error loading reward for timer:', error);
-        }
-    },
-
-    start() {
-        if (AppState.timer.seconds <= 0) return;
-        
-        UIManager.setTimerButtonStates(true);
-        
-        AppState.timer.interval = setInterval(() => {
-            AppState.timer.seconds--;
-            UIManager.updateTimerDisplay();
             
-            if (AppState.timer.seconds <= 0) {
-                this.stop();
+            if (response.ok) {
+                editingTaskId = null;
+                document.querySelector('#taskForm button[type="submit"]').textContent = 'Create Task';
+                document.getElementById('taskForm').reset();
+                loadTasks();
             }
-        }, CONFIG.TIMER_INTERVAL_MS);
-        
-        UIManager.updateBackgroundColor();
-    },
+        } else {
+            // Create new task
+            const response = await fetch('/api/tasks/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: title,
+                    reward: reward
+                })
+            });
+            
+            if (response.ok) {
+                document.getElementById('taskForm').reset();
+                loadTasks();
+            }
+        }
+    } catch (error) {
+        console.error('Error with task:', error);
+    }
+}
 
-    stop() {
-        if (AppState.timer.interval) {
-            clearInterval(AppState.timer.interval);
-            AppState.timer.interval = null;
+async function loadReward() {
+    try {
+        const response = await fetch('/api/reward');
+        const rewardData = await response.json();
+        document.getElementById('currentReward').textContent = rewardData.total_reward || 0;
+    } catch (error) {
+        console.error('Error loading reward:', error);
+    }
+}
+
+async function updateReward(event) {
+    event.preventDefault();
+    
+    const newValue = parseInt(document.getElementById('newReward').value);
+    
+    try {
+        const response = await fetch(`/api/reward?new_value=${newValue}`, {
+            method: 'PUT'
+        });
+        
+        if (response.ok) {
+            document.getElementById('rewardForm').reset();
+            loadReward();
+        }
+    } catch (error) {
+        console.error('Error updating reward:', error);
+    }
+}
+
+async function loadTasks() {
+    try {
+        let url = '/api/tasks/';
+        if (currentFilter !== 'all') {
+            url += `?status=${currentFilter}`;
+        }
+        const response = await fetch(url);
+        const tasks = await response.json();
+        displayTasks(tasks);
+    } catch (error) {
+        console.error('Error loading tasks:', error);
+    }
+}
+
+function displayTasks(tasks) {
+    const tbody = document.getElementById('tasksBody');
+    tbody.innerHTML = '';
+    
+    tasks.forEach(task => {
+        const row = tbody.insertRow();
+        
+        let statusButton = '';
+        if (task.status === 'pending') {
+            statusButton = `<span class="zyx-task-status zyx-status-pending" onclick="updateTaskStatus(${task.id}, 'start')">${task.status}</span>`;
+        } else if (task.status === 'working') {
+            statusButton = `<span class="zyx-task-status zyx-status-in-progress" onclick="updateTaskStatus(${task.id}, 'finish')">${task.status}</span>`;
+        } else {
+            statusButton = `<span class="zyx-task-status zyx-status-completed">${task.status}</span>`;
         }
         
-        UIManager.setTimerButtonStates(false);
-        UIManager.updateBackgroundColor();
+        const deleteButton = task.status === 'pending' 
+            ? '<button class="zyx-action-link zyx-delete-link" onclick="deleteTask(' + task.id + ')">Delete</button>'
+            : '';
         
-        this._syncToDatabase();
-    },
+        row.innerHTML = `
+            <td><span class="zyx-task-id" onclick="editTask(${task.id}, '${task.title.replace(/'/g, "\\'")}', ${task.reward})">${task.id}</span></td>
+            <td>${task.title}</td>
+            <td>${task.reward}</td>
+            <td>${statusButton}</td>
+            <td>${new Date(task.created_at).toLocaleDateString()}</td>
+            <td class="zyx-actions-cell">
+                ${deleteButton}
+            </td>
+        `;
+    });
+}
 
-    async _syncToDatabase() {
-        try {
-            const remainingMinutes = Math.ceil(AppState.timer.seconds / 60);
-            await ApiService.put(`/reward?new_value=${remainingMinutes}`);
-        } catch (error) {
-            console.error('Error syncing to database:', error);
-        }
+async function updateTaskStatus(taskId, action) {
+    try {
+        await fetch(`/api/tasks/${taskId}/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: action
+            })
+        });
+        loadTasks();
+    } catch (error) {
+        console.error('Error updating task status:', error);
     }
-};
+}
 
-// ====== NETWORKING MANAGER ======
-const NetworkingManager = {
-    async checkStatus() {
-        try {
-            const state = AppState.timer.isRunning() ? "on" : "off";
-            await ApiService.post('/networking', { state });
-        } catch (error) {
-            console.error('Error checking networking status:', error);
-        }
-    },
-
-    startPeriodicCheck() {
-        AppState.networking.checkInterval = setInterval(
-            () => this.checkStatus(),
-            CONFIG.NETWORKING_CHECK_INTERVAL_MS
-        );
+async function downloadCSV() {
+    try {
+        const response = await fetch('/api/tasks/dump-csv');
+        const csvData = await response.text();
+        
+        const blob = new Blob([csvData], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'tasks.csv';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    } catch (error) {
+        console.error('Error downloading CSV:', error);
     }
-};
+}
 
-// ====== APPLICATION INITIALIZATION ======
-const App = {
-    async init() {
-        await TaskManager.loadTasks();
-        
-        // Load timer after delay to ensure DOM is ready
-        setTimeout(() => {
-            TimerManager.loadFromReward();
-        }, CONFIG.REWARD_LOAD_DELAY_MS);
-        
-        NetworkingManager.startPeriodicCheck();
-        UIManager.updateBackgroundColor();
+async function deleteTask(taskId) {
+    try {
+        await fetch(`/api/tasks/${taskId}`, {
+            method: 'DELETE'
+        });
+        loadTasks();
+    } catch (error) {
+        console.error('Error deleting task:', error);
     }
-};
+}
 
-// ====== MODAL MANAGER ======
-const ModalManager = {
-    open(taskTitle, taskText) {
-        const modal = Utils.getElementById('taskModal');
-        const titleElement = Utils.getElementById('modalTaskTitle');
-        const textElement = Utils.getElementById('modalTaskText');
-        
-        titleElement.textContent = 'Task Details';
-        textElement.textContent = taskText;
-        
-        modal.classList.remove('zyx-modal-hidden');
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
-    },
+function filterTasks(status) {
+    currentFilter = status;
+    
+    // Update button active state
+    document.querySelectorAll('.zyx-filter-btn').forEach(btn => {
+        btn.classList.remove('zyx-filter-active');
+    });
+    document.querySelector(`[data-filter="${status}"]`).classList.add('zyx-filter-active');
+    
+    // Reload tasks with filter
+    loadTasks();
+}
 
-    close() {
-        const modal = Utils.getElementById('taskModal');
-        modal.classList.add('zyx-modal-hidden');
-        document.body.style.overflow = ''; // Restore scrolling
-    }
-};
-
-// ====== GLOBAL FUNCTIONS (for HTML onclick handlers) ======
-window.startTimer = () => TimerManager.start();
-window.stopTimer = () => TimerManager.stop();
-window.ModalManager = ModalManager;
-
-// ====== APPLICATION STARTUP ======
-window.addEventListener('load', () => App.init());
+document.getElementById('taskForm').addEventListener('submit', createTask);
+document.getElementById('rewardForm').addEventListener('submit', updateReward);
+loadReward();
+loadTasks();
