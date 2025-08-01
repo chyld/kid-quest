@@ -162,7 +162,8 @@ class RewardApp(QMainWindow):
             QTableWidget {
                 gridline-color: #CCCCCC;
                 selection-background-color: #E3F2FD;
-                alternate-background-color: #F5F5F5;
+                background-color: #2196F3;
+                alternate-background-color: #FF9800;
                 font-family: 'Segoe UI', 'Arial', sans-serif;
                 font-size: 12px;
             }
